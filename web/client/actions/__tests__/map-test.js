@@ -7,7 +7,7 @@
  */
 
 var expect = require('expect');
-var {CHANGE_MAP_VIEW, changeMapView} = require('../map');
+var {CHANGE_MAP_VIEW, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, LOAD_FEATURE_INFO, getFeatureInfo, changeMapView} = require('../map');
 
 describe('Test correctness of the map actions', () => {
 
@@ -20,5 +20,41 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toBe(CHANGE_MAP_VIEW);
         expect(retval.center).toBe(testCenter);
         expect(retval.zoom).toBe(testZoom);
+    });
+
+    it('get feature info data', (done) => {
+        getFeatureInfo('base/web/client/test-resources/featureInfo-response.json', {})((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe(LOAD_FEATURE_INFO);
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('get feature info exception', (done) => {
+        getFeatureInfo('base/web/client/test-resources/featureInfo-exception.json', {})((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('get feature info error', (done) => {
+        getFeatureInfo('requestError.json', {})((e) => {
+            try {
+                expect(e).toExist();
+                expect(e.type).toBe(ERROR_FEATURE_INFO);
+                done();
+            } catch(ex) {
+                done(ex);
+            }
+        });
     });
 });
