@@ -21,6 +21,10 @@ function changeMapView(center, zoom) {
     };
 }
 
+/**
+ * Private
+ * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
+ */
 function loadFeatureInfo(data) {
     return {
         type: LOAD_FEATURE_INFO,
@@ -28,6 +32,10 @@ function loadFeatureInfo(data) {
     };
 }
 
+/**
+ * Private
+ * @return a ERROR_FEATURE_INFO action with the error occured
+ */
 function errorFeatureInfo(e) {
     return {
         type: ERROR_FEATURE_INFO,
@@ -35,6 +43,11 @@ function errorFeatureInfo(e) {
     };
 }
 
+/**
+ * Private
+ * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occured
+ *         during a GetFeatureInfo request.
+ */
 function exceptionsFeatureInfo(exceptions) {
     return {
         type: EXCEPTIONS_FEATURE_INFO,
@@ -42,6 +55,13 @@ function exceptionsFeatureInfo(exceptions) {
     };
 }
 
+/**
+ * Sends a wms GetFeatureInfo request and dispatches the right action
+ * in case of success, error or exceptions.
+ *
+ * @param wmsBasePath {string} base path to the wms service
+ * @param requestParams {object} map of params for a getfeatureinfo request.
+ */
 function getFeatureInfo(wmsBasePath, requestParams) {
     const defaultParams = {
         service: 'WMS',
