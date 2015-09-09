@@ -55,6 +55,24 @@ describe("test the ToggleButton", () => {
         expect(icons.length).toBe(1);
     });
 
+    it('test glyphicon property with text', () => {
+        const tb = React.render(<ToggleButton glyphicon="info-sign" text="button"/>, document.body);
+        expect(tb).toExist();
+
+        const tbNode = React.findDOMNode(tb);
+        expect(tbNode).toExist();
+
+        const button = tbNode.getElementsByTagName('button')[0];
+        expect(button).toExist();
+
+        const btnItems = button.getElementsByTagName('span');
+        expect(btnItems.length).toBe(3);
+
+        expect(btnItems[0].innerHTML).toBe("");
+        expect(btnItems[1].innerHTML).toBe("&nbsp;");
+        expect(btnItems[2].innerHTML).toBe("button");
+    });
+
     it('test toggle behaviour', () => {
         const tb = React.render(<ToggleButton/>, document.body);
         expect(tb).toExist();
