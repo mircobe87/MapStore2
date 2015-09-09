@@ -16,33 +16,29 @@ var ToggleButton = React.createClass({
         id: React.PropTypes.string,
         btnConfig: React.PropTypes.object,
         text: React.PropTypes.string,
-        glyphicon: React.PropTypes.string
+        glyphicon: React.PropTypes.string,
+        pressed: React.PropTypes.bool,
+        onClick: React.PropTypes.function
     },
-    getInitialState() {
+    getDefaultProps() {
         return {
-            on: false
+            onClick: () => {},
+            pressed: false
         };
     },
-    componentWillMount() {
-        if (this.props.btnConfig) {
-            delete this.props.btnConfig.bsStyle;
-        }
+    onClick() {
+        this.props.onClick(this.props.pressed);
     },
     render() {
         return (
-            <div id={this.props.id} onClick={this.toggle}>
-                <Button {...this.props.btnConfig} bsStyle={this.state.on ? 'primary' : 'default'}>
+            <div id={this.props.id} onClick={this.onClick}>
+                <Button {...this.props.btnConfig} bsStyle={this.props.pressed ? 'primary' : 'default'}>
                     {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                     {this.props.glyphicon && this.props.text ? "\u00A0" : null}
                     {this.props.text}
                 </Button>
             </div>
         );
-    },
-    toggle() {
-        this.setState({
-            on: !this.state.on
-        });
     }
 });
 

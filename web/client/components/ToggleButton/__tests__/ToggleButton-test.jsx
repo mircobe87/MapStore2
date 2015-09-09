@@ -20,8 +20,6 @@ describe("test the ToggleButton", () => {
     it('test default properties', () => {
         const tb = React.render(<ToggleButton/>, document.body);
         expect(tb).toExist();
-        expect(tb.state).toExist();
-        expect(tb.state.on).toBe(false);
 
         const tbNode = React.findDOMNode(tb);
         expect(tbNode).toExist();
@@ -32,13 +30,6 @@ describe("test the ToggleButton", () => {
         expect(button.className.indexOf('default') >= 0).toBe(true);
 
         expect(button.innerHTML).toNotExist();
-    });
-
-    it('test initial bsStyle overriding', () => {
-        const tb = React.render(<ToggleButton btnConfig={{bsStyle: 'error'}}/>, document.body);
-        expect(tb).toExist();
-
-        expect(tb.props.btnConfig.bsStyle).toNotExist();
     });
 
     it('test glyphicon property', () => {
@@ -73,21 +64,27 @@ describe("test the ToggleButton", () => {
         expect(btnItems[2].innerHTML).toBe("button");
     });
 
-    it('test toggle behaviour', () => {
-        const tb = React.render(<ToggleButton/>, document.body);
+    it('test button state', () => {
+        const tb = React.render(<ToggleButton pressed={true}/>, document.body);
         expect(tb).toExist();
 
         const tbNode = React.findDOMNode(tb);
         const button = tbNode.getElementsByTagName('button')[0];
 
-        tbNode.click();
-        expect(button.className.indexOf('default') >= 0).toBe(false);
         expect(button.className.indexOf('primary') >= 0).toBe(true);
-        expect(tb.state.on).toBe(true);
+    });
 
+    it('test click handler', () => {
+        const testHandlers = {
+            onClick: (pressed) => {return pressed; }
+        };
+        const spy = expect.spyOn(testHandlers, 'onClick');
+        const tb = React.render(<ToggleButton pressed={true} onClick={testHandlers.onClick}/>, document.body);
+
+        const tbNode = React.findDOMNode(tb);
         tbNode.click();
-        expect(button.className.indexOf('default') >= 0).toBe(true);
-        expect(button.className.indexOf('primary') >= 0).toBe(false);
-        expect(tb.state.on).toBe(false);
+
+        expect(spy.calls.length).toEqual(1);
+        expect(spy.calls[0].arguments).toEqual([true]);
     });
 });
