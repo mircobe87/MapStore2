@@ -105,15 +105,19 @@ describe('LeafletMap', () => {
 
         expect(spy.calls.length).toEqual(2);
 
-        expect(spy.calls[0].arguments.length).toEqual(2);
+        expect(spy.calls[0].arguments.length).toEqual(3);
         argsOk = spy.calls[0].arguments[0].lat === 43.9 && spy.calls[0].arguments[0].lng === 10.3;
         expect(argsOk).toBe(true);
         expect(spy.calls[0].arguments[1]).toBe(12);
+        expect(spy.calls[0].arguments[2].bounds).toExist();
+        expect(spy.calls[0].arguments[2].crs).toExist();
 
-        expect(spy.calls[1].arguments.length).toEqual(2);
+        expect(spy.calls[1].arguments.length).toEqual(3);
         argsOk = spy.calls[1].arguments[0].lat === 44 && spy.calls[1].arguments[0].lng === 10;
         expect(argsOk).toBe(true);
         expect(spy.calls[1].arguments[1]).toBe(12);
+        expect(spy.calls[0].arguments[2].bounds).toExist();
+        expect(spy.calls[0].arguments[2].crs).toExist();
     });
 
     it('check if the map changes when receive new props', () => {

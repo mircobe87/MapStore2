@@ -13,13 +13,15 @@ describe('Test correctness of the map actions', () => {
 
     it('changeMapVeiw', () => {
         const testCenter = 0;
-        const testZoom = 9;
-        var retval = changeMapView(testCenter, testZoom);
+        const testZoom = 5;
+        const testBbox = 9;
+        var retval = changeMapView(testCenter, testZoom, testBbox);
 
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_VIEW);
         expect(retval.center).toBe(testCenter);
         expect(retval.zoom).toBe(testZoom);
+        expect(retval.bbox).toBe(testBbox);
     });
 
     it('get feature info data', (done) => {

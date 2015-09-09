@@ -13,11 +13,12 @@ const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
 const ERROR_FEATURE_INFO = 'ERROR_FEATURE_INFO';
 const EXCEPTIONS_FEATURE_INFO = 'EXCEPTIONS_FEATURE_INFO';
 
-function changeMapView(center, zoom) {
+function changeMapView(center, zoom, bbox) {
     return {
         type: CHANGE_MAP_VIEW,
         center: center,
-        zoom: zoom
+        zoom: zoom,
+        bbox: bbox
     };
 }
 
@@ -88,4 +89,11 @@ function getFeatureInfo(wmsBasePath, requestParams) {
     };
 }
 
-module.exports = {CHANGE_MAP_VIEW, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, LOAD_FEATURE_INFO, getFeatureInfo, changeMapView};
+module.exports = {
+    CHANGE_MAP_VIEW,
+    ERROR_FEATURE_INFO,
+    EXCEPTIONS_FEATURE_INFO,
+    LOAD_FEATURE_INFO,
+    getFeatureInfo,
+    changeMapView
+};

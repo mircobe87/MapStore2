@@ -45,7 +45,16 @@ var OpenlayersMap = React.createClass({
         map.on('moveend', () => {
             let view = map.getView();
             let c = this.normalizeCenter(view.getCenter());
-            this.props.onMapViewChanges({lng: c[0], lat: c[1]}, view.getZoom());
+            let bbox = view.calculateExtent(map.getSize());
+            this.props.onMapViewChanges({lng: c[0], lat: c[1]}, view.getZoom(), {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: view.getProjection().getCode()
+            });
         });
 
         this.map = map;

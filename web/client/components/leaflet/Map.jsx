@@ -29,7 +29,16 @@ var LeafletMap = React.createClass({
         var map = L.map(this.props.id).setView([this.props.center.lat, this.props.center.lng],
           this.props.zoom);
         map.on('moveend', () => {
-            this.props.onMapViewChanges(map.getCenter(), map.getZoom());
+            const bbox = map.getBounds().toBBoxString().split(',');
+            this.props.onMapViewChanges(map.getCenter(), map.getZoom(), {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: 'EPSG:4326'
+            });
         });
 
         this.map = map;

@@ -53,9 +53,9 @@ var Viewer = React.createClass({
         }
         return null;
     },
-    manageNewMapView(center, zoom) {
+    manageNewMapView(center, zoom, bbox) {
         const normCenter = {x: center.lng, y: center.lat, crs: "EPSG:4326"};
-        this.props.changeMapView(normCenter, zoom);
+        this.props.changeMapView(normCenter, zoom, bbox);
     }
 });
 
