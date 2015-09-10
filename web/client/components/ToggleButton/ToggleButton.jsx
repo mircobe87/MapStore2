@@ -18,7 +18,7 @@ var ToggleButton = React.createClass({
         text: React.PropTypes.string,
         glyphicon: React.PropTypes.string,
         pressed: React.PropTypes.bool,
-        onClick: React.PropTypes.function
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
