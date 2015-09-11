@@ -43,6 +43,11 @@ module.exports = {
             rewrite: rewriteUrl("/geostore/rest/$1"),
             host: "mapstore.geo-solutions.it",
             target: "http://mapstore.geo-solutions.it"
+        }, {
+            path: new RegExp("/geoserver/wms(.*)"),
+            rewrite: rewriteUrl("/geoserver/wms$1"),
+            host: "demo.geo-solutions.it",
+            target: "http://demo.geo-solutions.it"
         }]
     },
 

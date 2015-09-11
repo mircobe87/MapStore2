@@ -9,6 +9,7 @@ var {createStore, compose, combineReducers, applyMiddleware} = require('redux');
 
 var thunkMiddleware = require('redux-thunk');
 var mapConfig = require('../../../reducers/config');
+var mapInfo = require('../../../reducers/mapInfo');
 var locale = require('../../../reducers/locale');
 var url = require('url');
 
@@ -17,7 +18,8 @@ const urlQuery = url.parse(window.location.href, true).query;
  // reducers
 const reducers = combineReducers({
     mapConfig,
-    locale
+    locale,
+    mapInfo
 });
 
 let finalCreateStore;

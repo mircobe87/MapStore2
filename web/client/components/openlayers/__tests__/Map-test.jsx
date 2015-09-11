@@ -146,6 +146,37 @@ describe('OpenlayersMap', () => {
         });
     });
 
+    it('check if the handler for "click" event is called', () => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <OpenlayersMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+                onClick={testHandlers.handler}
+            />
+        , document.body);
+
+        const olMap = map.map;
+        // const mapDiv = olMap.getViewport();
+        // const mapCanv = olMap.getViewport().getElementsByTagName('canvas')[0];
+        // const mapOvl = olMap.getOverlayContainer();
+        // React.addons.TestUtils.Simulate.click(mapDiv);
+        // React.addons.TestUtils.Simulate.click(mapCanv);
+
+        // mapDiv.click();
+        olMap.prototype.handleBrowserEvent(new MouseEvent('click'));
+        // mapOvl.click();
+        expect(spy.calls.length).toEqual(1);
+
+        expect(spy.calls[0].arguments.length).toEqual(1);
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+    });
+
     it('check if the map changes when receive new props', () => {
         const map = React.render(
             <OpenlayersMap

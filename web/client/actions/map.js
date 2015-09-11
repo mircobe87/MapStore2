@@ -12,6 +12,9 @@ const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
 const ERROR_FEATURE_INFO = 'ERROR_FEATURE_INFO';
 const EXCEPTIONS_FEATURE_INFO = 'EXCEPTIONS_FEATURE_INFO';
+const CHANGE_MAPINFO_STATE = 'CHANGE_MAPINFO_STATE';
+const NEW_MAPINFO_REQUEST = 'NEW_MAPINFO_REQUEST';
+const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
 
 function changeMapView(center, zoom, bbox) {
     return {
@@ -89,11 +92,37 @@ function getFeatureInfo(wmsBasePath, requestParams) {
     };
 }
 
+function changeMapInfoState(enabled) {
+    return {
+        type: CHANGE_MAPINFO_STATE,
+        enabled: enabled
+    };
+}
+
+function newMapInfoRequest(reqConfig) {
+    return {
+        type: NEW_MAPINFO_REQUEST,
+        request: reqConfig
+    };
+}
+
+function purgeMapInfoResults() {
+    return {
+        type: PURGE_MAPINFO_RESULTS
+    };
+}
+
 module.exports = {
     CHANGE_MAP_VIEW,
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
     LOAD_FEATURE_INFO,
+    CHANGE_MAPINFO_STATE,
+    NEW_MAPINFO_REQUEST,
+    PURGE_MAPINFO_RESULTS,
     getFeatureInfo,
-    changeMapView
+    changeMapView,
+    changeMapInfoState,
+    newMapInfoRequest,
+    purgeMapInfoResults
 };

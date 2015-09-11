@@ -120,6 +120,32 @@ describe('LeafletMap', () => {
         expect(spy.calls[0].arguments[2].crs).toExist();
     });
 
+    it('check if the handler for "click" event is called', () => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = React.render(
+            <LeafletMap
+                center={{lat: 43.9, lng: 10.3}}
+                zoom={11}
+                onClick={testHandlers.handler}
+            />
+        , document.body);
+
+        const leafletMap = map.map;
+        const mapDiv = leafletMap.getContainer();
+
+        mapDiv.click();
+
+        expect(spy.calls.length).toEqual(1);
+
+        expect(spy.calls[0].arguments.length).toEqual(1);
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+    });
+
     it('check if the map changes when receive new props', () => {
         const map = React.render(
             <LeafletMap

@@ -14,7 +14,8 @@ var LeafletMap = React.createClass({
         center: React.PropTypes.object,
         zoom: React.PropTypes.number,
         projection: React.PropTypes.string,
-        onMapViewChanges: React.PropTypes.func
+        onMapViewChanges: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -39,6 +40,9 @@ var LeafletMap = React.createClass({
                 },
                 crs: 'EPSG:4326'
             });
+        });
+        map.on('click', (event) => {
+            this.props.onClick(event.containerPoint);
         });
 
         this.map = map;

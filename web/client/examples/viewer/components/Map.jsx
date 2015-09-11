@@ -20,7 +20,8 @@ var assign = require('object-assign');
 var VMap = React.createClass({
     propTypes: {
         config: React.PropTypes.object,
-        onMapViewChanges: React.PropTypes.func
+        onMapViewChanges: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     renderLayers(layers) {
         if (layers) {
@@ -39,7 +40,8 @@ var VMap = React.createClass({
                 center={{lat: center.y, lng: center.x}}
                 zoom={this.props.config.zoom}
                 projection={this.props.config.projection || 'EPSG:3857'}
-                onMapViewChanges={this.props.onMapViewChanges}>
+                onMapViewChanges={this.props.onMapViewChanges}
+                onClick={this.props.onClick}>
                 {this.renderLayers(this.props.config.layers)}
             </LMap>
         );

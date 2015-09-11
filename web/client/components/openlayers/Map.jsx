@@ -15,7 +15,8 @@ var OpenlayersMap = React.createClass({
         center: React.PropTypes.object,
         zoom: React.PropTypes.number,
         projection: React.PropTypes.string,
-        onMapViewChanges: React.PropTypes.func
+        onMapViewChanges: React.PropTypes.func,
+        onClick: React.PropTypes.func
     },
     getDefaultProps() {
         return {
@@ -54,6 +55,13 @@ var OpenlayersMap = React.createClass({
                     maxy: bbox[3]
                 },
                 crs: view.getProjection().getCode()
+            });
+        });
+        map.on('click', (event) => {
+            console.log(event);
+            this.props.onClick({
+                x: event.pixel[0],
+                y: event.pixel[1]
             });
         });
 
