@@ -24,7 +24,8 @@ function mapConfig(state = null, action) {
             return assign({}, state, {
                 center: action.center,
                 zoom: action.zoom,
-                bbox: action.bbox
+                bbox: action.bbox,
+                size: action.size
             });
         default:
             return state;

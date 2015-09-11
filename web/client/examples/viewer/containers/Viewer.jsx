@@ -77,9 +77,9 @@ var Viewer = React.createClass({
         }
         return null;
     },
-    manageNewMapView(center, zoom, bbox) {
+    manageNewMapView(center, zoom, bbox, size) {
         const normCenter = {x: center.lng, y: center.lat, crs: "EPSG:4326"};
-        this.props.changeMapView(normCenter, zoom, bbox);
+        this.props.changeMapView(normCenter, zoom, bbox, size);
     },
     manageClickOnMap(clickPoint) {
         const bboxBounds = this.props.mapConfig.bbox.bounds;
@@ -89,6 +89,8 @@ var Viewer = React.createClass({
                 query_layers: this.getFirstWmsVisibleLayer().name,
                 x: clickPoint.x,
                 y: clickPoint.y,
+                height: this.props.mapConfig.size.height,
+                width: this.props.mapConfig.size.width,
                 crs: this.props.mapConfig.bbox.crs,
                 bbox: bboxBounds.minx + "," +
                       bboxBounds.miny + "," +

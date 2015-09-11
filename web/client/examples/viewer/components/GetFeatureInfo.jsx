@@ -9,6 +9,7 @@
 var React = require('react');
 var BootstrapReact = require('react-bootstrap');
 var Modal = BootstrapReact.Modal;
+var I18N = require('../../../components/I18N/I18N');
 
 var ToggleButton = require('../../../components/ToggleButton/ToggleButton');
 var HtmlRenderer = require('../../../components/HtmlRenderer/HtmlRenderer');
@@ -38,7 +39,7 @@ var GetFeatureInfo = React.createClass({
         var content = "";
         const regexp = /^.*<body>(.*)<\/body>.*$/g;
         for (let i = 0; i < responses.length; i++) {
-            if (responses[i] === typeof String) {
+            if (typeof responses[i] === "string") {
                 content = responses[i].replace(regexp, '$1');
                 output.push(<HtmlRenderer html={content}/>);
             } else if (responses[i].length !== undefined) {
@@ -70,7 +71,9 @@ var GetFeatureInfo = React.createClass({
                     onHide={this.props.onCloseResult}
                     bsStyle="info">
 
-                    <Modal.Header closeButton/>
+                    <Modal.Header closeButton>
+                        <Modal.Title><I18N.Message msgId="getFeatureInfoTitle" /></Modal.Title>
+                    </Modal.Header>
                     <Modal.Body>
                         <div style={{overflow: "auto"}}>
                             {this.getModalContent(this.props.htmlResponses)}

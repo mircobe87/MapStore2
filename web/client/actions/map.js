@@ -16,12 +16,13 @@ const CHANGE_MAPINFO_STATE = 'CHANGE_MAPINFO_STATE';
 const NEW_MAPINFO_REQUEST = 'NEW_MAPINFO_REQUEST';
 const PURGE_MAPINFO_RESULTS = 'PURGE_MAPINFO_RESULTS';
 
-function changeMapView(center, zoom, bbox) {
+function changeMapView(center, zoom, bbox, size) {
     return {
         type: CHANGE_MAP_VIEW,
         center: center,
         zoom: zoom,
-        bbox: bbox
+        bbox: bbox,
+        size: size
     };
 }
 

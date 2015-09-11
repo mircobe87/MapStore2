@@ -84,7 +84,7 @@ describe('LeafletMap', () => {
     });
 
     it('check if the handler for "moveend" event is called', () => {
-        var argsOk;
+        const expectedCalls = 2;
         const testHandlers = {
             handler: () => {}
         };
@@ -100,24 +100,26 @@ describe('LeafletMap', () => {
 
         const leafletMap = map.map;
 
-        leafletMap.setZoom(12);
-        leafletMap.setView({lat: 44, lng: 10});
+        leafletMap.on('moveend', () => {
+            expect(spy.calls.length).toEqual(expectedCalls);
+            expect(spy.calls[0].arguments.length).toEqual(4);
 
-        expect(spy.calls.length).toEqual(2);
+            expect(spy.calls[0].arguments[0].lat).toEqual(43.9);
+            expect(spy.calls[0].arguments[0].lng).toEqual(10.3);
+            expect(spy.calls[0].arguments[1]).toEqual(11);
 
-        expect(spy.calls[0].arguments.length).toEqual(3);
-        argsOk = spy.calls[0].arguments[0].lat === 43.9 && spy.calls[0].arguments[0].lng === 10.3;
-        expect(argsOk).toBe(true);
-        expect(spy.calls[0].arguments[1]).toBe(12);
-        expect(spy.calls[0].arguments[2].bounds).toExist();
-        expect(spy.calls[0].arguments[2].crs).toExist();
+            expect(spy.calls[1].arguments[0].lat).toEqual(44);
+            expect(spy.calls[1].arguments[0].lng).toEqual(10);
+            expect(spy.calls[1].arguments[1]).toEqual(12);
 
-        expect(spy.calls[1].arguments.length).toEqual(3);
-        argsOk = spy.calls[1].arguments[0].lat === 44 && spy.calls[1].arguments[0].lng === 10;
-        expect(argsOk).toBe(true);
-        expect(spy.calls[1].arguments[1]).toBe(12);
-        expect(spy.calls[0].arguments[2].bounds).toExist();
-        expect(spy.calls[0].arguments[2].crs).toExist();
+            for (let c = 0; c < expectedCalls; c++) {
+                expect(spy.calls[c].arguments[2].bounds).toExist();
+                expect(spy.calls[c].arguments[2].crs).toExist();
+                expect(spy.calls[c].arguments[3].height).toExist();
+                expect(spy.calls[c].arguments[3].width).toExist();
+            }
+        });
+        leafletMap.setView({lat: 44, lng: 10}, 12);
     });
 
     it('check if the handler for "click" event is called', () => {

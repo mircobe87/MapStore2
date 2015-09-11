@@ -47,6 +47,10 @@ var OpenlayersMap = React.createClass({
             let view = map.getView();
             let c = this.normalizeCenter(view.getCenter());
             let bbox = view.calculateExtent(map.getSize());
+            let size = {
+                width: map.getSize()[0],
+                height: map.getSize()[1]
+            };
             this.props.onMapViewChanges({lng: c[0], lat: c[1]}, view.getZoom(), {
                 bounds: {
                     minx: bbox[0],
@@ -55,10 +59,9 @@ var OpenlayersMap = React.createClass({
                     maxy: bbox[3]
                 },
                 crs: view.getProjection().getCode()
-            });
+            }, size);
         });
         map.on('click', (event) => {
-            console.log(event);
             this.props.onClick({
                 x: event.pixel[0],
                 y: event.pixel[1]

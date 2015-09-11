@@ -7,21 +7,36 @@
  */
 
 var expect = require('expect');
-var {CHANGE_MAP_VIEW, ERROR_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, LOAD_FEATURE_INFO, getFeatureInfo, changeMapView} = require('../map');
+var {
+    CHANGE_MAP_VIEW,
+    ERROR_FEATURE_INFO,
+    EXCEPTIONS_FEATURE_INFO,
+    LOAD_FEATURE_INFO,
+    CHANGE_MAPINFO_STATE,
+    NEW_MAPINFO_REQUEST,
+    PURGE_MAPINFO_RESULTS,
+    getFeatureInfo,
+    changeMapView,
+    changeMapInfoState,
+    newMapInfoRequest,
+    purgeMapInfoResults
+} = require('../map');
 
 describe('Test correctness of the map actions', () => {
 
     it('changeMapVeiw', () => {
         const testCenter = 0;
-        const testZoom = 5;
-        const testBbox = 9;
-        var retval = changeMapView(testCenter, testZoom, testBbox);
+        const testZoom = 3;
+        const testBbox = 6;
+        const testSize = 9;
+        var retval = changeMapView(testCenter, testZoom, testBbox, testSize);
 
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_VIEW);
         expect(retval.center).toBe(testCenter);
         expect(retval.zoom).toBe(testZoom);
         expect(retval.bbox).toBe(testBbox);
+        expect(retval.size).toBe(testSize);
     });
 
     it('get feature info data', (done) => {
@@ -58,5 +73,29 @@ describe('Test correctness of the map actions', () => {
                 done(ex);
             }
         });
+    });
+
+    it('change map info state', () => {
+        const testVal = "val";
+        const retval = changeMapInfoState(testVal);
+
+        expect(retval.type).toBe(CHANGE_MAPINFO_STATE);
+        expect(retval.enabled).toExist();
+        expect(retval.enabled).toBe(testVal);
+    });
+
+    it('add new info request', () => {
+        const testVal = "val";
+        const retval = newMapInfoRequest(testVal);
+
+        expect(retval.type).toBe(NEW_MAPINFO_REQUEST);
+        expect(retval.request).toExist();
+        expect(retval.request).toBe(testVal);
+    });
+
+    it('delete all results', () => {
+        const retval = purgeMapInfoResults();
+
+        expect(retval.type).toBe(PURGE_MAPINFO_RESULTS);
     });
 });

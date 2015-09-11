@@ -29,23 +29,12 @@ var LeafletMap = React.createClass({
     componentDidMount() {
         var map = L.map(this.props.id).setView([this.props.center.lat, this.props.center.lng],
           this.props.zoom);
-        map.on('moveend', () => {
-            const bbox = map.getBounds().toBBoxString().split(',');
-            this.props.onMapViewChanges(map.getCenter(), map.getZoom(), {
-                bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
-                },
-                crs: 'EPSG:4326'
-            });
-        });
-        map.on('click', (event) => {
-            this.props.onClick(event.containerPoint);
-        });
 
         this.map = map;
+        this.map.on('moveend', this.updateMapInfoState);
+        this.map.on('click', (event) => { this.props.onClick(event.containerPoint); });
+
+        this.updateMapInfoState();
         // NOTE: this re-call render function after div creation to have the map initialized.
         this.forceUpdate();
     },
@@ -63,6 +52,7 @@ var LeafletMap = React.createClass({
     },
     componentWillUnmount() {
         this.map.remove();
+        // window.removeEventListener('resize', this.onWindowResize);
     },
     render() {
         const map = this.map;
@@ -74,6 +64,22 @@ var LeafletMap = React.createClass({
                 {children}
             </div>
         );
+    },
+    updateMapInfoState() {
+        const bbox = this.map.getBounds().toBBoxString().split(',');
+        const size = {
+            height: this.map.getSize().y,
+            width: this.map.getSize().x
+        };
+        this.props.onMapViewChanges(this.map.getCenter(), this.map.getZoom(), {
+            bounds: {
+                minx: bbox[0],
+                miny: bbox[1],
+                maxx: bbox[2],
+                maxy: bbox[3]
+            },
+            crs: 'EPSG:4326'
+        }, size);
     }
 });
 
