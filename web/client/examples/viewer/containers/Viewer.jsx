@@ -50,7 +50,7 @@ var Viewer = React.createClass({
                 key="getFeatureInfo"
                 enabled={this.props.mapInfo.enabled}
                 htmlResponses={this.props.mapInfo.responses}
-                btnIcon="info-sign"
+                btnIcon="question-sign"
                 btnClick={this.manageGetFeatureInfoClick}
                 onCloseResult={this.manageCloseResults}
             />
