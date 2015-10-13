@@ -8,7 +8,7 @@ var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/Backgro
 var LayerTree = require('../components/LayerTree');
 var MapToolBar = require("../components/MapToolBar");
 var Settings = require("../components/Settings");
-var GetFeatureInfoV2 = require("../components/GetFeatureInfoV2");
+var GetFeatureInfo = require("../components/GetFeatureInfo");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSelector");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
@@ -100,7 +100,7 @@ module.exports = {
                         crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
                 </Settings>
             </MapToolBar>,
-            <GetFeatureInfoV2
+            <GetFeatureInfo
                 key="getFeatureInfo"
                 enabled={props.mapInfo.enabled}
                 htmlResponses={props.mapInfo.responses}

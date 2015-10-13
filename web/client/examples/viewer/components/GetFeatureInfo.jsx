@@ -7,16 +7,21 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Modal = BootstrapReact.Modal;
-var Tabs = BootstrapReact.Tabs;
-var Tab = BootstrapReact.Tab;
+var {Modal, Alert} = require('react-bootstrap');
+var Book = require('../../../components/misc/Book');
+
 var I18N = require('../../../components/I18N/I18N');
-var HtmlRenderer = require('../../../components/misc/HtmlRenderer');
+
+var ApplyTemplate = require('../../../components/misc/ApplyTemplate');
+var PropertiesViewer = require('../../../components/misc/PropertiesViewer');
+
 var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
+
+
 var Spinner = require('../../../components/spinners/BasicSpinner/BasicSpinner');
-var GetFeatureInfo = React.createClass({
+
+var GetFeatureInfoV2 = React.createClass({
     propTypes: {
         htmlResponses: React.PropTypes.array,
         htmlRequests: React.PropTypes.object,
@@ -77,8 +82,7 @@ var GetFeatureInfo = React.createClass({
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +
                           bounds.maxx + "," +
-                          bounds.maxy,
-                    info_format: "text/html"
+                          bounds.maxy
                 };
                 const layerMetadata = {
                     title: layer.title
@@ -101,88 +105,41 @@ var GetFeatureInfo = React.createClass({
     // a specific layer.
     getModalContent(responses) {
         var output = [];
-        var content = "";
-        var title = "";
-        var style = "";
-        const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;
-        const regexpStyle = /(<style[\s\=\w\/\"]*>[^<]*<\/style>)/i;
-        const regexpException = /<ServiceException[\s]?[\s\w\=\"]*>([^<]*)<\/ServiceException>/i;
-
-        for (let i = 0; i < responses.length; i++) {
-            const {response, layerMetadata} = responses[i];
-
-            title = (
-                <div key={i} style={{
-                        maxWidth: "96px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                    }}>
-                    {layerMetadata.title}
-                </div>
+        const getFeatureProps = feature => feature.properties;
+        const getFormattedContent = (feature, i) => {
+            return (
+                <ApplyTemplate key={i} data={feature} template={getFeatureProps}>
+                    <PropertiesViewer title={feature.id} exclude={["bbox"]}/>
+                </ApplyTemplate>
             );
+        };
 
-            if (typeof response === "string") {
-                // response can be a HTML feature info or XML exception
-                if (response.indexOf('<?xml') === 0) { // XML exception
-                    let match = regexpException.exec(response);
-                    let exceptionMsg = match && match.length === 2 ? match[1].trim() : "";
-                    content = (<div><h3>Exception</h3><p style={{margin: "16px"}}>{exceptionMsg}</p></div>);
-                } else { // HTML feature info
-                    // gets css rules from the response and removes which are related to body tag.
-                    let styleMatch = regexpStyle.exec(response);
-                    style = styleMatch && styleMatch.length === 2 ? regexpStyle.exec(response)[1] : "";
-                    style = style.replace(/body[,]+/g, '');
-                    // gets feature info managing an eventually empty response
-                    content = response.replace(regexpBody, '$1').trim();
-                    if (content.length === 0) {
-                        content = <p style={{margin: "16px"}}><I18N.Message msgId="noFeatureInfo"/></p>;
-                    } else {
-                        content = <HtmlRenderer key={i} html={style + content} />;
-                    }
-                }
-                output.push(
-                    <Tab eventKey={i} key={i} title={title}>
-                        <div style={{overflow: "auto"}}>
-                            {content}
-                        </div>
-                    </Tab>
-                );
-            } else if (response.length !== undefined) {
-                // response is an array of exceptions
-                const exArray = response;
-                for (let j = 0; j < exArray.length; j++) {
-                    output.push(
-                        <Tab eventKey={i} key={i} title={title}>
-                            <div style={{overflow: "auto"}}>
-                                <HtmlRenderer key={i} html={
-                                    '<h3>Exception: ' + j + '</h3>' +
-                                    '<p>' + exArray[j].text + '</p>'
-                                }/>
-                            </div>
-                        </Tab>
-                    );
-                }
+        output = responses.map((res, i) => {
+            let content = "";
+            const {response, layerMetadata} = res;
+
+            if (response.features) {
+                content = <div key={i}>{response.features.map(getFormattedContent)}</div>;
             } else {
-                let match = regexpBody.exec(response.data);
-                if (match && match.length === 2) {
-                    content = match[1];
-                } else {
-                    content = '<p>' + response.data + '</p>';
-                }
-                output.push(
-                    <Tab eventKey={i} title={title}>
-                        <div style={{overflow: "auto"}}>
-                            <HtmlRenderer key={i} html={content}/>
-                        </div>
-                    </Tab>
+                content = (
+                    <Alert bsStyle={"danger"} key={i}>
+                        <h4><I18N.HTML msgId={"getFeatureInfoError.title"}/></h4>
+                        <p><I18N.HTML msgId={"getFeatureInfoError.text"}/></p>
+                    </Alert>
                 );
             }
-        }
-        return output;
+
+            return {component: content, title: layerMetadata.title};
+        });
+        return output.reduce((prev, item) => {
+            prev.titles.push(item.title);
+            prev.pages.push(item.component);
+            return prev;
+        }, {titles: [], pages: []});
     },
     render() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
+        let {titles, pages} = this.getModalContent(this.props.htmlResponses);
         return (
                 <Modal
                     show={this.props.htmlRequests.length !== 0}
@@ -194,13 +151,11 @@ var GetFeatureInfo = React.createClass({
                         { (missingRequests !== 0 ) ? <Spinner value={missingRequests} sSize="sp-small" /> : null }
                         <I18N.Message msgId="getFeatureInfoTitle" />
                        </Modal.Title>
-
                     </Modal.Header>
                     <Modal.Body>
-
-                        <Tabs defaultActiveKey={0}>
-                            {this.getModalContent(this.props.htmlResponses)}
-                        </Tabs>
+                        <Book pageTitles={titles}>
+                            {pages}
+                        </Book>
                     </Modal.Body>
                 </Modal>
 
@@ -225,4 +180,4 @@ var GetFeatureInfo = React.createClass({
     }
 });
 
-module.exports = GetFeatureInfo;
+module.exports = GetFeatureInfoV2;
