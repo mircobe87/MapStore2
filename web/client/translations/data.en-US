@@ -56,6 +56,10 @@
             "tooltip": "Select Background"
         },
         "getFeatureInfoTitle": "Feature Info",
+        "getFeatureInfoError": {
+            "title": "Ooops! Something's wrong",
+            "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
+        },
         "noFeatureInfo": "There is no information available for the feature you clicked"
     }
 }
