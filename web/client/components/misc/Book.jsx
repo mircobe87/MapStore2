@@ -49,7 +49,7 @@ var Book = React.createClass({
     render() {
         return (
             <div>
-                <div style={{fontWeight: "bold", textAlign: "center"}}>
+                <div style={{textAlign: "center", marginBottom: "12px"}}>
                     {this.renderTitle()}
                 </div>
                 <div>

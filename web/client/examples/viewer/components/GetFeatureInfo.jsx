@@ -132,7 +132,7 @@ var GetFeatureInfoV2 = React.createClass({
             return {component: content, title: layerMetadata.title};
         });
         return output.reduce((prev, item) => {
-            prev.titles.push(item.title);
+            prev.titles.push(<span><b>Layer: </b>{item.title}</span>);
             prev.pages.push(item.component);
             return prev;
         }, {titles: [], pages: []});
