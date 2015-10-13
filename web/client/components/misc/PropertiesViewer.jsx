@@ -11,36 +11,40 @@ const React = require('react');
 var PropertiesViewer = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
-        data: React.PropTypes.object,
+        exclude: React.PropTypes.array,
         titleStyle: React.PropTypes.object,
         listStyle: React.PropTypes.object,
         componentStyle: React.PropTypes.object
     },
     getDefaultProps() {
         return {
-            data: {},
+            exclude: [],
             titleStyle: {
                 height: "100%",
                 width: "100%",
                 padding: "4px 0px",
                 background: "rgb(240,240,240)",
                 borderRadius: "4px",
-                textAlign: "center"
+                textAlign: "center",
+                textOverflow: "ellipsis"
             },
             listStyle: {
                 margin: "0px 0px 4px 0px"
             },
             componentStyle: {
-                padding: "0"
+                padding: "0px 0px 2px 0px",
+                margin: "2px 0px 0px 0px"
             }
         };
     },
     getBodyItems() {
-        return Object.keys(this.props.data).map((key) => {
-            return (
-                <p style={this.props.listStyle}><b>{key}</b> {this.props.data[key]}</p>
-            );
-        });
+        return Object.keys(this.props)
+            .filter(this.toExlude)
+            .map((key) => {
+                return (
+                    <p style={this.props.listStyle}><b>{key}</b> {this.props[key]}</p>
+                );
+            });
     },
     renderHeader() {
         if (!this.props.title) {
@@ -57,7 +61,9 @@ var PropertiesViewer = React.createClass({
         return (
             <div style={{
                 padding: "4px",
-                margin: 0
+                margin: 0,
+                borderRadius: "4px",
+                boxShadow: "0px 2px 1px rgb(240,240,240)"
             }}>
                 {items}
             </div>
@@ -65,11 +71,17 @@ var PropertiesViewer = React.createClass({
     },
     render() {
         return (
-            <div>
+            <div style={this.props.componentStyle}>
                 {this.renderHeader()}
                 {this.renderBody()}
             </div>
         );
+    },
+    alwaysExcluded: ["exclude", "titleStyle", "listStyle", "componentStyle", "title"],
+    toExlude(propName) {
+        return this.alwaysExcluded
+            .concat(this.props.exclude)
+            .indexOf(propName) === -1;
     }
 });
 

@@ -24,7 +24,7 @@ var ApplyTemplate = React.createClass({
         var childProps = this.props.template(this.props.data);
         var content = null;
         if (this.props.children) {
-            content = React.cloneElement(this.props.children, {data: childProps});
+            content = React.cloneElement(this.props.children, childProps);
         }
         return content;
     },
