@@ -58,6 +58,9 @@ var PropertiesViewer = React.createClass({
     },
     renderBody() {
         var items = this.getBodyItems();
+        if (items.length === 0) {
+            return null;
+        }
         return (
             <div style={{
                 padding: "4px",

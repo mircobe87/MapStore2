@@ -26,7 +26,7 @@ var Book = React.createClass({
         };
     },
     getPageNumber() {
-        return (this.state.currentPage + 1) + "/" + this.props.children.length;
+        return this.props.children ? ((this.state.currentPage + 1) + "/" + this.props.children.length) : null;
     },
     renderTitle() {
         let title;
@@ -39,7 +39,7 @@ var Book = React.createClass({
     },
     renderBody() {
         let body;
-        if (this.props.children.length > 0 && this.state.currentPage < this.props.children.length) {
+        if (this.props.children && this.props.children.length > 0 && this.state.currentPage < this.props.children.length) {
             body = React.cloneElement(this.props.children[this.state.currentPage]);
         } else {
             body = null;

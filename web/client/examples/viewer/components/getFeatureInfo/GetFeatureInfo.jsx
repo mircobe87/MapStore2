@@ -7,22 +7,23 @@
  */
 
 var React = require('react');
-var {Modal, Alert} = require('react-bootstrap');
-var Book = require('../../../components/misc/Book');
-
-var I18N = require('../../../components/I18N/I18N');
-
-var ApplyTemplate = require('../../../components/misc/ApplyTemplate');
-var PropertiesViewer = require('../../../components/misc/PropertiesViewer');
-
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 var assign = require('object-assign');
+var {Modal} = require('react-bootstrap');
 
+var I18N = require('../../../../components/I18N/I18N');
+var Spinner = require('../../../../components/spinners/BasicSpinner/BasicSpinner');
+var JSONFeatureInfoViewer = require('./infoViewers/JSONFeatureInfoViewer');
+var HTMLFeatureInfoViewer = require('./infoViewers/HTMLFeatureInfoViewer');
+var TEXTFeatureInfoViewer = require('./infoViewers/TEXTFeatureInfoViewer');
 
-var Spinner = require('../../../components/spinners/BasicSpinner/BasicSpinner');
+var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+var MapInfoUtils = require('../../../../utils/MapInfoUtils');
 
-var GetFeatureInfoV2 = React.createClass({
+var GetFeatureInfo = React.createClass({
     propTypes: {
+        infoFormat: React.PropTypes.oneOf(
+            MapInfoUtils.getAvailableInfoFormatValues()
+        ),
         htmlResponses: React.PropTypes.array,
         htmlRequests: React.PropTypes.object,
         btnConfig: React.PropTypes.object,
@@ -56,7 +57,8 @@ var GetFeatureInfoV2 = React.createClass({
                 getFeatureInfo() {},
                 purgeMapInfoResults() {},
                 changeMousePointer() {}
-            }
+            },
+            infoFormat: MapInfoUtils.getDefaultInfoFormatValue()
         };
     },
     getInitialState() {
@@ -82,7 +84,8 @@ var GetFeatureInfoV2 = React.createClass({
                     bbox: bounds.minx + "," +
                           bounds.miny + "," +
                           bounds.maxx + "," +
-                          bounds.maxy
+                          bounds.maxy,
+                    info_format: this.props.infoFormat
                 };
                 const layerMetadata = {
                     title: layer.title
@@ -101,45 +104,26 @@ var GetFeatureInfoV2 = React.createClass({
     onModalHiding() {
         this.props.actions.purgeMapInfoResults();
     },
-    // returns a array of tabs where each one contains feature info for
-    // a specific layer.
-    getModalContent(responses) {
-        var output = [];
-        const getFeatureProps = feature => feature.properties;
-        const getFormattedContent = (feature, i) => {
-            return (
-                <ApplyTemplate key={i} data={feature} template={getFeatureProps}>
-                    <PropertiesViewer title={feature.id} exclude={["bbox"]}/>
-                </ApplyTemplate>
-            );
-        };
-
-        output = responses.map((res, i) => {
-            let content = "";
-            const {response, layerMetadata} = res;
-
-            if (response.features) {
-                content = <div key={i}>{response.features.map(getFormattedContent)}</div>;
-            } else {
-                content = (
-                    <Alert bsStyle={"danger"} key={i}>
-                        <h4><I18N.HTML msgId={"getFeatureInfoError.title"}/></h4>
-                        <p><I18N.HTML msgId={"getFeatureInfoError.text"}/></p>
-                    </Alert>
-                );
-            }
-
-            return {component: content, title: layerMetadata.title};
-        });
-        return output.reduce((prev, item) => {
-            prev.titles.push(<span><b>Layer: </b>{item.title}</span>);
-            prev.pages.push(item.component);
-            return prev;
-        }, {titles: [], pages: []});
+    renderInfo() {
+        var retval = null;
+        var infoFormats = MapInfoUtils.getAvailableInfoFormat();
+        switch (this.props.infoFormat) {
+            case infoFormats.JSON:
+                retval = (<JSONFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            case infoFormats.HTML:
+                retval = (<HTMLFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            case infoFormats.TEXT:
+                retval = (<TEXTFeatureInfoViewer responses={this.props.htmlResponses} />);
+                break;
+            default:
+                retval = null;
+        }
+        return retval;
     },
     render() {
         let missingRequests = this.props.htmlRequests.length - this.props.htmlResponses.length;
-        let {titles, pages} = this.getModalContent(this.props.htmlResponses);
         return (
                 <Modal
                     show={this.props.htmlRequests.length !== 0}
@@ -153,12 +137,9 @@ var GetFeatureInfoV2 = React.createClass({
                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Book pageTitles={titles}>
-                            {pages}
-                        </Book>
+                        {this.renderInfo()}
                     </Modal.Body>
                 </Modal>
-
         );
     },
     reprojectBbox(bbox, destSRS) {
@@ -180,4 +161,4 @@ var GetFeatureInfoV2 = React.createClass({
     }
 });
 
-module.exports = GetFeatureInfoV2;
+module.exports = GetFeatureInfo;

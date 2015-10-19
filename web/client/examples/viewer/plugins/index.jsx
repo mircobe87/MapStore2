@@ -8,7 +8,8 @@ var BackgroundSwitcher = require("../../../components/BackgroundSwitcher/Backgro
 var LayerTree = require('../components/LayerTree');
 var MapToolBar = require("../components/MapToolBar");
 var Settings = require("../components/Settings");
-var GetFeatureInfo = require("../components/GetFeatureInfo");
+var GetFeatureInfo = require("../components/getFeatureInfo/GetFeatureInfo");
+var FeatureInfoFormatSelector = require("../../../components/misc/FeatureInfoFormatSelector");
 var MousePosition = require("../../../components/mapcontrols/mouseposition/MousePosition");
 var CRSSelector = require("../../../components/mapcontrols/mouseposition/CRSSelector");
 var ScaleBox = require("../../../components/ScaleBox/ScaleBox");
@@ -20,7 +21,7 @@ var floatingPanel = require('../reducers/floatingPanel');
 var layers = require('../reducers/layers');
 var mousePosition = require('../../../reducers/mousePosition');
 
-var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults} = require('../../../actions/mapInfo');
+var {getFeatureInfo, changeMapInfoState, purgeMapInfoResults, changeMapInfoFormat} = require('../../../actions/mapInfo');
 var {activatePanel} = require('../actions/floatingPanel');
 var {changeMousePosition, changeMousePositionCrs, changeMousePositionState} = require('../../../actions/mousePosition');
 
@@ -80,8 +81,6 @@ module.exports = {
                     <LangBar key="langSelector"
                     currentLocale={props.locale}
                     onLanguageChange={props.loadLocale}/>
-
-
                     <CRSSelector
                         key="crsSelector"
                         onCRSChange={props.changeMousePositionCrs}
@@ -98,6 +97,12 @@ module.exports = {
 
                         }}
                         crs={(props.mousePositionCrs) ? props.mousePositionCrs : props.mapConfig.projection} />
+                    <FeatureInfoFormatSelector
+                        onInfoFormatChange={props.changeMapInfoFormat}
+                        inputProps={{
+                            label: <Message msgId="infoFormatLbl" />
+                        }}
+                        infoFormat={props.mapInfo.infoFormat}/>
                 </Settings>
             </MapToolBar>,
             <GetFeatureInfo
@@ -105,6 +110,7 @@ module.exports = {
                 enabled={props.mapInfo.enabled}
                 htmlResponses={props.mapInfo.responses}
                 htmlRequests={props.mapInfo.requests}
+                infoFormat={props.mapInfo.infoFormat}
                 mapConfig={props.mapConfig}
                 actions={{
                     getFeatureInfo: props.getFeatureInfo,
@@ -143,6 +149,7 @@ module.exports = {
         layerLoading,
         layerLoad,
         changeMapView,
-        toggleNode
+        toggleNode,
+        changeMapInfoFormat
     }
 };
