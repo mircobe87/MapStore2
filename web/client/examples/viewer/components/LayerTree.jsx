@@ -13,7 +13,7 @@ var Layers = require('../../../components/Layers/Layers');
 var DefaultGroup = require('../../../components/Layers/DefaultGroup');
 var DefaultLayer = require('../../../components/Layers/DefaultLayer');
 
-var icon = require('../img/layers.png');
+var Glyphicon = require('../../../components/Glyphicon/Glyphicon');
 
 var LayerTree = React.createClass({
     propTypes: {
@@ -28,7 +28,7 @@ var LayerTree = React.createClass({
     },
     getDefaultProps() {
         return {
-            buttonContent: <img src={icon}/>,
+            buttonContent: <Glyphicon icon="flaticon-layers"/>,
             loadingList: [],
             propertiesChangeHandler: () => {},
             onToggleGroup: () => {},
