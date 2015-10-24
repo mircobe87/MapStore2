@@ -7,13 +7,11 @@
  */
 
 var React = require('react');
-var {Glyphicon, Button, Panel, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
+var {Button, Panel, ButtonGroup, ButtonToolbar} = require('react-bootstrap');
 var ToggleButton = require('../buttons/ToggleButton');
-var ReactIntl = require('react-intl');
-var FormattedNumber = ReactIntl.FormattedNumber;
+var {FormattedNumber} = require('react-intl');
+var Glyphicon = require('../Glyphicon/Glyphicon');
 
-var lineRuleIcon = require('./img/line-ruler.png');
-var areaRuleIcon = require('./img/area-ruler.png');
 var bearingRuleIcon = require('./img/bearing-ruler.png');
 
 let MeasureComponent = React.createClass({
@@ -36,7 +34,7 @@ let MeasureComponent = React.createClass({
     },
     getDefaultProps() {
         return {
-            icon: <Glyphicon glyph="minus"/>,
+            icon: <Glyphicon icon="mp2-tools"/>,
             columnProperties: {
                 xs: 4,
                 sm: 4,
@@ -127,11 +125,11 @@ let MeasureComponent = React.createClass({
                 <ButtonToolbar>
                     <ButtonGroup>
                         <ToggleButton
-                            text={<img src={lineRuleIcon}/>}
+                            text={<Glyphicon icon="mp2-ruler"/>}
                             pressed={this.props.lineMeasureEnabled}
                             onClick={this.onLineClick} />
                         <ToggleButton
-                            text={<img src={areaRuleIcon}/>}
+                            text={<Glyphicon icon="mp2-ruler2"/>}
                             pressed={this.props.areaMeasureEnabled}
                             onClick={this.onAreaClick} />
                         <ToggleButton
@@ -141,6 +139,7 @@ let MeasureComponent = React.createClass({
                     </ButtonGroup>
                     <ButtonGroup>
                         <Button
+                            bsStyle="primary"
                             onClick={this.onResetClick}>
                             {this.props.resetButtonText}
                         </Button>

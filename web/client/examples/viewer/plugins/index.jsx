@@ -107,8 +107,8 @@ module.exports = {
                     buttonTooltip={<Message msgId="settings" />}>
                     <h5><Message msgId="language" /></h5>
                     <LangBar key="langSelector"
-                    currentLocale={props.locale}
-                    onLanguageChange={props.loadLocale}/>
+                        currentLocale={props.locale}
+                        onLanguageChange={props.loadLocale}/>
                     <CRSSelector
                         key="crsSelector"
                         onCRSChange={props.changeMousePositionCrs}

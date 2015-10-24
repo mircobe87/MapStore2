@@ -7,7 +7,8 @@
  */
 
 var React = require('react');
-var {Grid, Col, Thumbnail, Glyphicon} = require('react-bootstrap');
+var {Grid, Col, Thumbnail} = require('react-bootstrap');
+var Glyphicon = require('../Glyphicon/Glyphicon');
 var HYBRID = require('./images/mapthumbs/HYBRID.jpg');
 var ROADMAP = require('./images/mapthumbs/ROADMAP.jpg');
 var TERRAIN = require('./images/mapthumbs/TERRAIN.jpg');
@@ -53,7 +54,7 @@ let BackgroundSwitcher = React.createClass({
     },
     getDefaultProps() {
         return {
-            icon: <Glyphicon glyph="globe"/>,
+            icon: <Glyphicon icon="mp2-earth16"/>,
             columnProperties: {
                 xs: 6,
                 sm: 4,
@@ -80,7 +81,7 @@ let BackgroundSwitcher = React.createClass({
             items.push(<Col {...this.props.columnProperties} key={i}>
           <Thumbnail data-position={i} key={"bkg-swicher-item-" + i} bsStyle={layer.visibility ? "primary" : "default"} src={thumb} alt={layer.source + " " + layer.name}
               onClick={this.changeLayerVisibility}>
-                  <div style={{height: '38px', textOverflow: 'ellipsis', overflow: 'hidden'}}><strong>{layer.title}</strong></div>
+                  <div style={{whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', textAlign: 'center'}}><strong>{layer.title}</strong></div>
           </Thumbnail>
       </Col>);
         }
