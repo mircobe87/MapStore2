@@ -28,7 +28,7 @@ var LayerTree = React.createClass({
     },
     getDefaultProps() {
         return {
-            buttonContent: <Glyphicon icon="flaticon-layers"/>,
+            buttonContent: <Glyphicon icon="mp2-layers"/>,
             loadingList: [],
             propertiesChangeHandler: () => {},
             onToggleGroup: () => {},

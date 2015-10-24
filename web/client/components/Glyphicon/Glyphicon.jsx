@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-require('./assets/flaticon.css');
+require('./assets/styles.css');
 const React = require('react');
 const BSicon = require('react-bootstrap').Glyphicon;
 
